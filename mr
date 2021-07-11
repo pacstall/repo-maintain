@@ -117,7 +117,7 @@ install() {
 }' > packages/neofetch/neofetch.pacscript
         git init
         git add .
-        git commit -m "Created repo and added neofetch"
+        git commit -m "init: Created repo and added neofetch"
         exit
     else
         fancy_message warn "Directory not empty"
@@ -132,7 +132,7 @@ install() {
             exit 1
         else
             echo $(for i in $(/bin/ls -d */); do echo ${i%%/}; done) > ../packagelist
-            fancy_message info "Updated packagelist"
+            fancy_message info "add: Updated packagelist"
             exit
         fi
     ;;
