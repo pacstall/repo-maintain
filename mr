@@ -77,7 +77,9 @@ function fancy_message() {
 }
 
 function usage {
-        echo "./$(basename $0) -h --> shows usage"
+        echo "$(basename $0) -h --> shows usage"
+        echo "$(basename $0) -I --> initializes a pacstall repo"
+        echo "$(basename $0) -A --> adds packages to the packagelist"
 }
 
 case "$1" in
@@ -121,6 +123,18 @@ install() {
         fancy_message warn "Directory not empty"
         exit 1
     fi
+    ;;
+
+    -A|--add)
+        cd packages
+        if ! cd packages; then
+            fancy_message error "Cannot enter packages directory"
+            exit 1
+        else
+            echo $(for i in $(/bin/ls -d */); do echo ${i%%/}; done) > ../packagelist
+            fancy_message info "Updated packagelist"
+            exit
+        fi
     ;;
     *)
         usage
