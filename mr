@@ -87,6 +87,10 @@ function usage {
 
 case "$1" in
     -I|--init)
+        if [[ -z $2 ]]; then
+            fancy_message error "Specify a pacscript"
+            exit 1
+        fi
         if [ -z "$(\ls -A .)" ]; then
             fancy_message info "Creating repo in $(pwd)"
             mkdir -p packages
@@ -128,7 +132,11 @@ install() {
     fi
     ;;
 
-    -A|--add)
+    -U|--update)
+        if [[ -z $2 ]]; then
+            fancy_message error "Specify a pacscript"
+            exit 1
+        fi
         DIR=$(pwd)
         cd packages
         if ! cd packages; then
@@ -141,7 +149,28 @@ install() {
         cd "$DIR"
     ;;
 
+    -A|--add)
+        if [[ -z $2 ]]; then
+            fancy_message error "Specify a pacscript"
+            exit 1
+        fi
+        if ! test -f "packagelist"; then
+            fancy_message error "This repo is broken (missing packagelist)"
+            exit 1
+        fi
+        if [[ -d packages ]]; then
+            fancy_message error "This repo is broken (missing packages dir)"
+        fi
+        INPUT="$2"
+        NAME=$(echo $INPUT | cut -d. -f1 | sed 's|.*/||')
+        mkdir -p packages/$NAME
+        \cp -rf $INPUT packages/$NAME/
+    ;;
     -T|--test)
+        if [[ -z $2 ]]; then
+            fancy_message error "Specify a pacscript"
+            exit 1
+        fi
         # Get's date for tmp file
         DATE=$(date +%s%N)
         # Get's full input, could be ~/myscript.pacscript or just mypacscript.pacscript
