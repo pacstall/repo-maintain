@@ -1,5 +1,7 @@
 #!/bin/bash
 
+
+STGDIR="$HOME/.local/share/repo-maintain"
 # Bold High Intensity
 export BIBlack='\033[1;90m'      # Black
 export BIRed='\033[1;91m'        # Red
@@ -80,6 +82,7 @@ function usage {
         echo "$(basename $0) -h --> shows usage"
         echo "$(basename $0) -I --> initializes a pacstall repo"
         echo "$(basename $0) -A --> adds packages to the packagelist"
+        echo "$(basename $0) -T --> tests a package in a docker container"
 }
 
 case "$1" in
@@ -126,6 +129,7 @@ install() {
     ;;
 
     -A|--add)
+        DIR=$(pwd)
         cd packages
         if ! cd packages; then
             fancy_message error "Cannot enter packages directory"
@@ -133,8 +137,39 @@ install() {
         else
             echo $(for i in $(/bin/ls -d */); do echo ${i%%/}; done) > ../packagelist
             fancy_message info "add: Updated packagelist"
-            exit
         fi
+        cd "$DIR"
+    ;;
+
+    -T|--test)
+        # Get's date for tmp file
+        DATE=$(date +%s%N)
+        # Get's full input, could be ~/myscript.pacscript or just mypacscript.pacscript
+        INPUT="$1"
+        # Get's the basename, so `/home/henry/mypacscript.pacscript` -> `mypacscript.pacscript`
+        FILE=$(basename $INPUT)
+        # Get's the name of $FILE without the .pacscript extension
+        BASENAME=$(echo $FILE | cut -d. -f1)
+        # Pulls ubuntu image if not installed or if installed, checks for updates
+        docker pull ubuntu
+        # copy our default docker script to /tmp
+        cp "$STGDIR"/docker.sh /tmp/mr-$DATE/docker.sh 
+        # This is complicated, so heres a simple example (the pacscript won't work, but just imagine it's a full script)
+        #
+        # $ cat my.pacscript
+        # name="test"
+        # url="https://github.com/test/test"
+        #
+        # Will turn into this:
+        #
+        # echo 'name="test"
+        # url="https://github.com/test/test"' > my.pacscript
+        #
+        # So basically we're taking the contents of the pacscript, and turning it into a mini script inside echo that could be run by bash
+        echo "echo '$(cat $FILE)"\'" > $FILE" | tee -a /tmp/mr-$DATE/docker.sh
+        # Add the final bit that will append the command to install the pacscript in the docker container
+        echo "pacstall -Il $BASENAME" | tee -a /tmp/mr-$DATE/docker.sh
+        docker container run -i ubuntu:latest /bin/bash -s < /tmp/mr-"$DATE"/docker.sh
     ;;
     *)
         usage
