@@ -145,14 +145,18 @@ install() {
         # Get's date for tmp file
         DATE=$(date +%s%N)
         # Get's full input, could be ~/myscript.pacscript or just mypacscript.pacscript
-        INPUT="$1"
+        INPUT="$2"
         # Get's the basename, so `/home/henry/mypacscript.pacscript` -> `mypacscript.pacscript`
         FILE=$(basename $INPUT)
+        # Get the name of a file, so `alacritty.pacscript` -> `alacritty`
+        NAME=$(echo $FILE | cut -d. -f1)
         # Get's the name of $FILE without the .pacscript extension
-        BASENAME=$(echo $FILE | cut -d. -f1)
+        BASENAME=$(echo $INPUT | cut -d. -f1)
         # Pulls ubuntu image if not installed or if installed, checks for updates
         docker pull ubuntu
         # copy our default docker script to /tmp
+        mkdir -p "$STGDIR"
+        mkdir -p /tmp/mr-$DATE
         cp "$STGDIR"/docker.sh /tmp/mr-$DATE/docker.sh 
         # This is complicated, so heres a simple example (the pacscript won't work, but just imagine it's a full script)
         #
@@ -166,9 +170,9 @@ install() {
         # url="https://github.com/test/test"' > my.pacscript
         #
         # So basically we're taking the contents of the pacscript, and turning it into a mini script inside echo that could be run by bash
-        echo "echo '$(cat $FILE)"\'" > $FILE" | tee -a /tmp/mr-$DATE/docker.sh
+        echo "echo '$(cat $INPUT)"\'" > $FILE" | tee -a /tmp/mr-$DATE/docker.sh
         # Add the final bit that will append the command to install the pacscript in the docker container
-        echo "pacstall -Il $BASENAME" | tee -a /tmp/mr-$DATE/docker.sh
+        echo "pacstall -Il $NAME" | tee -a /tmp/mr-$DATE/docker.sh
         docker container run -i ubuntu:latest /bin/bash -s < /tmp/mr-"$DATE"/docker.sh
     ;;
     *)
