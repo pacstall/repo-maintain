@@ -2,6 +2,7 @@
 
 STGDIR="$HOME/.local/share/repo-maintain"
 mkdir -p "$STGDIR"
+mkdir -p ~/.local/bin
 echo "Installing Docker"
 
 haveProg() {
@@ -38,4 +39,5 @@ fi
 echo "Installing latest Ubuntu via Docker"
 docker pull ubuntu:latest
 
-mv docker.sh "$STGDIR"
+cp docker.sh "$STGDIR"
+cp mr ~/.local/bin
