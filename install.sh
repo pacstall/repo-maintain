@@ -35,8 +35,8 @@ fi
 
 sudo usermod -a -G docker $USER
 
-echo "Installing latest Ubuntu via Docker"
-docker pull ubuntu:latest
+echo "Installing Pacstall via Docker"
+docker pull ghcr.io/pacstall/pacstall:1.4
 
 cp docker.sh "$STGDIR"
 cp mr ~/.local/bin
