@@ -138,7 +138,6 @@ install() {
             exit 1
         fi
         DIR=$(pwd)
-        cd packages
         if ! cd packages; then
             fancy_message error "Cannot enter packages directory"
             exit 1
@@ -154,7 +153,7 @@ install() {
             fancy_message error "Specify a pacscript"
             exit 1
         fi
-        if ! test -f "packagelist"; then
+        if [ ! test -f "packagelist" ]; then
             fancy_message error "This repo is broken (missing packagelist)"
             exit 1
         fi
