@@ -33,8 +33,7 @@ else
     exit 2
 fi
 
-
-
+sudo usermod -a -G docker $USER
 
 echo "Installing latest Ubuntu via Docker"
 docker pull ubuntu:latest
