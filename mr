@@ -73,7 +73,7 @@ function fancy_message() {
   case ${MESSAGE_TYPE} in
     info) echo -e "[${BGreen}+${NC}] INFO: ${MESSAGE}";;
     warn) echo -e "[${BRed}*${NC}] WARNING: ${MESSAGE}";;
-    error) echo -e "[${BRed}!${NC}] ERROR: ${MESSAGE}";;
+    error) echo -e "[${BRed}!${NC}] ERROR: ${MESSAGE}" >&2;;
     *) echo -e "[${BOLD}?${NORMAL}] UNKNOWN: ${MESSAGE}";;
   esac
 }
@@ -87,14 +87,18 @@ function usage {
 
 case "$1" in
     -I|--init)
-        if [[ -z $2 ]]; then
-            fancy_message error "Specify a pacscript"
-            exit 1
+        # Checks if user gave -I input: `mr -I my_repo` would create my_repo and cd into it
+        if [[ -z "$2" ]]; then
+            # This will create a directory, but if mkdir fails (the directory exists already), then fancy_message error it and quit
+            mkdir "$2" || { fancy_message error "Directory already exists"; exit 1; }
+            cd "$2"
         fi
-        if [ -z "$(\ls -A .)" ]; then
+        # Else, check if pwd is empty
+        if [[ -z "$(\ls -A .)" ]]; then
             fancy_message info "Creating repo in $(pwd)"
             mkdir -p packages
             touch packagelist
+            # Add neofetch to the repo, because why not (btw i use arch)
             mkdir -p packages/neofetch
             echo 'name="neofetch"
 pkgname="neofetch"
@@ -122,10 +126,14 @@ build() {
 install() {
     sudo make install DESTDIR=/usr/src/pacstall/neofetch
 }' > packages/neofetch/neofetch.pacscript
+        # Create a git repo
         git init
+        # Add the contents of pwd to git
         git add .
+        # Commit it
         git commit -m "init: Created repo and added neofetch"
         exit
+    # If the directory does contain something
     else
         fancy_message warn "Directory not empty"
         exit 1
@@ -133,27 +141,28 @@ install() {
     ;;
 
     -U|--update)
-        if [[ -z $2 ]]; then
-            fancy_message error "Specify a pacscript"
-            exit 1
-        fi
         DIR=$(pwd)
         if ! cd packages; then
             fancy_message error "Cannot enter packages directory"
             exit 1
         else
+            # This fancy line will output the contents of the current directory in a single line, alphabeticaly ordered
             echo $(for i in $(/bin/ls -d */); do echo ${i%%/}; done) > ../packagelist
-            fancy_message info "add: Updated packagelist"
+            git add .
+            git commit -m "Updated packagelist"
         fi
+        # Then cd back into where we were before
         cd "$DIR"
     ;;
 
     -A|--add)
+        # Checks if user inputed anything
         if [[ -z $2 ]]; then
             fancy_message error "Specify a pacscript"
             exit 1
         fi
-        if [ ! test -f "packagelist" ]; then
+        # Checks for broken repos
+        if [[ ! test -f "packagelist" ]]; then
             fancy_message error "This repo is broken (missing packagelist)"
             exit 1
         fi
@@ -161,9 +170,21 @@ install() {
             fancy_message error "This repo is broken (missing packages dir)"
         fi
         INPUT="$2"
-        NAME=$(echo $INPUT | cut -d. -f1 | sed 's|.*/||')
-        mkdir -p packages/$NAME
-        \cp -rf $INPUT packages/$NAME/
+        # Check if beginning of input contains http (I'll assume that means the input is a url) and if it is true, then trigger the download process of that file
+        if [[ $INPUT == http* ]]; then
+            # This will get the ending of the url, so `https://raw.githubusercontent.com/pacstall/pacstall-programs/master/packages/blang-git/blang-git.pacscript` -> `blang-git.pacscript` and then cutting of the `.pacscript` at the end so we can identify the package name
+            PACSCRIPT=$(echo "${NAME##*/}" | cut -d. -f1)
+            # Make the directory
+            mkdir -p packages/"$PACSCRIPT"
+            # Download with a spicy progress bar to `packages/$PACSCRIPT`
+            wget -q --show-progress --progress=bar:force "$INPUT" -P packages/"$PACSCRIPT" 2>&1
+        # If the beginning of the input does not contain `http`, then assume the input is a local file
+        else
+            NAME=$(echo $INPUT | cut -d. -f1 | sed 's|.*/||')
+            mkdir -p packages/$NAME
+            # This is not a typo. Putting \ in front of a command makes it bypass aliases, and a lot of distros alias `cp` -> `cp -i` but we don't want that
+            \cp -rf $INPUT packages/$NAME/
+        fi
     ;;
     -T|--test)
         if [[ -z $2 ]]; then
@@ -201,7 +222,7 @@ install() {
         echo "echo '$(cat $INPUT)"\'" > $FILE" | tee -a /tmp/mr-$DATE/docker.sh
         # Add the final bit that will append the command to install the pacscript in the docker container
         echo "pacstall -Il $NAME" | tee -a /tmp/mr-$DATE/docker.sh
-        docker container run -i ubuntu:latest /bin/bash -s < /tmp/mr-"$DATE"/docker.sh
+        docker container run -i pacstall:latest /bin/bash -s < /tmp/mr-"$DATE"/docker.sh
     ;;
     *)
         usage
