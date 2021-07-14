@@ -162,7 +162,7 @@ install() {
             exit 1
         fi
         # Checks for broken repos
-        if [[ ! test -f "packagelist" ]]; then
+        if ! [[ -f packagelist ]]; then
             fancy_message error "This repo is broken (missing packagelist)"
             exit 1
         fi
