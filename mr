@@ -127,11 +127,9 @@ install() {
     sudo make install DESTDIR=/usr/src/pacstall/neofetch
 }' > packages/neofetch/neofetch.pacscript
         # Create a git repo
-        git init
-        # Add the contents of pwd to git
-        git add .
-        # Commit it
-        git commit -m "init: Created repo and added neofetch"
+        git init -q
+        # Add and commit it
+        git commit -am "init: Created repo and added neofetch"  &>/dev/null
         exit
     # If the directory does contain something
     else
