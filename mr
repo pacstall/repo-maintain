@@ -88,7 +88,7 @@ function usage {
 case "$1" in
     -I|--init)
         # Checks if user gave -I input: `mr -I my_repo` would create my_repo and cd into it
-        if [[ -z "$2" ]]; then
+        if [[ -n "$2" ]]; then
             # This will create a directory, but if mkdir fails (the directory exists already), then fancy_message error it and quit
             mkdir "$2" || { fancy_message error "Directory already exists"; exit 1; }
             cd "$2"
