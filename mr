@@ -219,9 +219,9 @@ install() {
         # url="https://github.com/test/test"' > my.pacscript
         #
         # So basically we're taking the contents of the pacscript, and turning it into a mini script inside echo that could be run by bash
-        echo "echo '$(cat $INPUT)"\'" > $FILE" | tee -a /tmp/mr-$DATE/docker.sh
+        echo "echo '$(cat $INPUT)"\'" > $FILE" | tee -a /tmp/mr-$DATE/docker.sh >/dev/null
         # Add the final bit that will append the command to install the pacscript in the docker container
-        echo "pacstall -Il $NAME" | tee -a /tmp/mr-$DATE/docker.sh
+        echo "pacstall -Il $NAME" | tee -a /tmp/mr-$DATE/docker.sh >/dev/null
         docker container run -i pacstall:latest /bin/bash -s < /tmp/mr-"$DATE"/docker.sh
     ;;
     *)
