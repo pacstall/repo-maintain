@@ -1,4 +1,5 @@
 # This is the default script that will setup pacstall in a next to nothing, barebones container. Unless you know what your doing, don't mess with anything in this file
-apt update -y 2>/dev/null
+apt update -y -qq 2>/dev/null
+apt install -y bc -qq 2>/dev/null
 # apt install -y wget sudo curl git nano zip unzip stow
 # bash -c "$(curl -fsSL https://git.io/JsADh || wget -q https://git.io/JsADh -O -)"
