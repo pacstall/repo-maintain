@@ -128,8 +128,10 @@ install() {
 }' > packages/neofetch/neofetch.pacscript
         # Create a git repo
         git init -q
+        # Make github detect anything ending with .pacscript as a shell script
+        echo '*.pacscript linguist-language=Shell' > .gitattributes
         # Add and commit it
-        git commit -am "init: Created repo and added neofetch"  &>/dev/null
+        git commit -am "init: Create repo, create gitattributes, and add neofetch"  &>/dev/null
         exit
     # If the directory does contain something
     else
