@@ -120,7 +120,7 @@ prepare() {
 }
 
 build() {
-    true 
+    true
 }
 
 install() {
@@ -206,7 +206,7 @@ install() {
         # copy our default docker script to /tmp
         mkdir -p "$STGDIR"
         mkdir -p /tmp/mr-$DATE
-        cp "$STGDIR"/docker.sh /tmp/mr-$DATE/docker.sh 
+        cp "$STGDIR"/docker.sh /tmp/mr-$DATE/docker.sh
         # This is complicated, so heres a simple example (the pacscript won't work, but just imagine it's a full script)
         #
         # $ cat my.pacscript
