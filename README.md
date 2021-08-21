@@ -32,7 +32,7 @@ $ mr -I
 
 After that, we test if the script works. This is done with a docker container of ubuntu.
 ```console
-$ mr -T ~/test.pacscript        #tests pacscript inside a docker container
+$ mr -T ~/test.pacscript        # tests pacscript inside a docker container
 ```
 
 After we see that the script ran successfully, we can add it to the repo.
