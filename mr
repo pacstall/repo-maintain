@@ -145,7 +145,7 @@ install() {
             exit 1
         else
             # This fancy line will output the contents of the current directory in a single line, alphabeticaly ordered
-            echo $(for i in $(/bin/ls -d */); do echo ${i%%/}; done) > ../packagelist
+            /bin/ls -1aA > ../packagelist
             git add .
             git commit -m "Updated packagelist"
         fi
