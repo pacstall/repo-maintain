@@ -1,4 +1,4 @@
-# repo-maintain tools
+# repo-maintain
 
 `mr` helps repo owners to easily maintain their repos
 
