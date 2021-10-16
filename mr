@@ -200,7 +200,7 @@ install() {
         # Get's the name of $FILE without the .pacscript extension
         BASENAME=$(echo $INPUT | cut -d. -f1)
         # Pulls ubuntu image if not installed or if installed, checks for updates
-        docker pull ubuntu
+        docker pull ghcr.io/pacstall/pacstall:latest
         # copy our default docker script to /tmp
         mkdir -p "$STGDIR"
         mkdir -p /tmp/mr-$DATE
