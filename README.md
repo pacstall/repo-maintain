@@ -20,6 +20,7 @@ All these commands need to be run in the directory of your repo
 `mr -U` updates packageslist file in your working directory if it's a repo. This file is used for searching and installing with pacstall.
 
 `mr -T` will test a pacscript in a docker container. Can be run in any directory
+
 `mr -B` will take a deb ending URL and create a pacscript for you
 
 ## Examples
