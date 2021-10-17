@@ -222,6 +222,34 @@ install() {
         echo "pacstall -Il $NAME" | tee -a /tmp/mr-$DATE/docker.sh >/dev/null
         docker container run -i pacstall:latest /bin/bash -s < /tmp/mr-"$DATE"/docker.sh
     ;;
+    -B|--deb)
+        URL="$2"
+        wget -N "$URL" -q --show-progress
+        
+        INPUT=$(basename "$URL")
+        _NAME=$(dpkg -f "$INPUT" Package)
+        _VERSION=$(dpkg -f "$INPUT" Version)
+        _DESCRIPTION=$(dpkg -f "$INPUT" Description | awk '{$1=$1};1' | sed '/^$/d')
+        _HASH=$(sha256sum "$INPUT" | cut -d' ' -f1)
+        
+        if [[ -z "$2" ]]; then
+          echo -n "Enter maintainer info (myname <myemail.potato.com>): "
+          read -r _MAINTAINER
+        else
+          _MAINTAINER="$2"
+        fi
+        
+        echo name=""${_NAME}-deb"" | tee "${_NAME}-deb.pacscript" > /dev/null
+        echo gives=""$_NAME"" | tee -a "${_NAME}-deb.pacscript" > /dev/null
+        echo version=""${_VERSION}"" | tee -a "${_NAME}-deb.pacscript" > /dev/null
+        echo url=""${URL}"" | tee -a "${_NAME}-deb.pacscript" > /dev/null
+        echo description=""${_DESCRIPTION}"" | tee -a "${_NAME}-deb.pacscript" > /dev/null
+        echo hash=""${_HASH}"" | tee -a "${_NAME}-deb.pacscript" > /dev/null
+        echo maintainer=""${_MAINTAINER}"" | tee -a "${_NAME}-deb.pacscript" > /dev/null
+        
+        rm -f "${INPUT}"
+
+    ;;
     *)
         usage
         exit 1
