@@ -1,4 +1,5 @@
 FROM ubuntu:impish
+LABEL org.opencontainers.image.description "Contains Pacstall 1.7.1 Razzmatazz"
 
 SHELL ["/bin/bash", "-l", "-c"]
 ARG DEBIAN_FRONTEND=noninteractive

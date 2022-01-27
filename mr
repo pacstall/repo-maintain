@@ -130,7 +130,7 @@ install() {
         echo '*.pacscript linguist-language=Shell' > .gitattributes
         echo 'neofetch' > packagelist
         # Add and commit it
-        git commit -am "init: Create repo, create gitattributes, and add neofetch"  &>/dev/null
+        git commit -am "add: neofetch"  &>/dev/null
         exit 0
     # If the directory does contain something
     else
@@ -147,7 +147,7 @@ install() {
         else
             # This fancy line will output the contents of the current directory in a single line, alphabeticaly ordered
             \ls -1aA > ../packagelist
-            git commit -am "Updated packagelist"
+            git commit -am "upd(packagelist)"
         fi
         # Then cd back into where we were before
         cd -
