@@ -15,7 +15,7 @@ RUN adduser --disabled-password --gecos '' pacstall
 RUN adduser pacstall sudo
 RUN sudo bash -c "$(curl -fsSL https://git.io/JsADh || wget -q https://git.io/JsADh -O -)"
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-RUN chmod 755 /var/log/pacstall
+RUN chown -R pacstall:pacstall /var/log/pacstall
 RUN chown -R pacstall:pacstall /tmp/pacstall
 
 USER pacstall
