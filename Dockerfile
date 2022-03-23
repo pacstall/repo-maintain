@@ -3,6 +3,8 @@ LABEL org.opencontainers.image.description "Contains Pacstall 1.7.2 Carmine"
 
 SHELL ["/bin/bash", "-l", "-c"]
 ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ="Africa/Libreville"
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 ARG package="pacstall"
 
 RUN apt-get update
