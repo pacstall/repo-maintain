@@ -7,6 +7,7 @@ ENV TZ="Africa/Libreville"
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 ARG package="pacstall"
 
+RUN dpkg --add-architecture i386
 RUN apt-get update
 RUN apt-get dist-upgrade -y
 
