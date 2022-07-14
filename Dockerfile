@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-LABEL org.opencontainers.image.description "Contains Pacstall 2.0.0 Apricot"
+LABEL org.opencontainers.image.description "Contains Pacstall 2.0.1 Mellow"
 
 SHELL ["/bin/bash", "-l", "-c"]
 ARG DEBIAN_FRONTEND=noninteractive
