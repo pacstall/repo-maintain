@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-LABEL org.opencontainers.image.description "Contains Pacstall 3.6.0 Arctic"
+LABEL org.opencontainers.image.description "Contains Pacstall 3.6.1 Permafrost"
 
 SHELL ["/bin/bash", "-l", "-c"]
 ARG DEBIAN_FRONTEND=noninteractive
