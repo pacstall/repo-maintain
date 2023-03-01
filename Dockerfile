@@ -11,7 +11,7 @@ RUN dpkg --add-architecture i386
 RUN apt-get update
 RUN apt-get dist-upgrade -y
 
-RUN apt-get install gawk wget curl git sudo nano -y --fix-missing
+RUN apt-get install wget curl git sudo nano -y --fix-missing
 
 
 RUN adduser --disabled-password --gecos '' pacstall
