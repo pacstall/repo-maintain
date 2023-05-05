@@ -13,7 +13,7 @@ RUN apt-get install wget curl git sudo nano ca-certificates -y --fix-missing --n
 
 RUN adduser --disabled-password --gecos '' pacstall
 RUN adduser pacstall sudo
-RUN sudo bash -c "$(curl -fsSL https://git.io/JsADh || wget -q https://git.io/JsADh -O -)"
+RUN sudo bash -c "$(curl -fsSL https://pacstall.dev/q/install\?dnt || wget -q https://pacstall.dev/q/install\?dnt -O -)"
 RUN sudo apt-get clean && sudo apt-get autoclean && sudo apt-get autoremove -y
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 RUN chown -R pacstall:pacstall /var/log/pacstall
