@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-LABEL org.opencontainers.image.description "Contains Pacstall 4.3.0 Firebrick"
+LABEL org.opencontainers.image.description "Contains Pacstall 4.3.1 Firebrick2"
 
 SHELL ["/bin/bash", "-l", "-c"]
 ARG DEBIAN_FRONTEND=noninteractive
